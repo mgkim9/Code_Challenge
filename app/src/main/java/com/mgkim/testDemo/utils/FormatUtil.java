@@ -49,4 +49,11 @@ public class FormatUtil {
         return false;
     }
 
+    public static String getFileName(final String url) {
+        String[] pathStrs = url.split("/");
+        if (pathStrs.length > 0) {
+            return pathStrs[pathStrs.length - 1];
+        }
+        return null;
+    }
 }
