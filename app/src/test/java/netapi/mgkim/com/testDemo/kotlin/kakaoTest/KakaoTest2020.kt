@@ -5,8 +5,9 @@ import org.junit.Assert
 import org.junit.Test
 import java.util.*
 
+
 //    https://tech.kakao.com/2019/10/02/kakao-blind-recruitment-2020-round1/
-class KakaoTest2020{
+class KakaoTest2020 {
 
 //  https://programmers.co.kr/learn/courses/30/lessons/60057
 //1. 비밀 지도(난이도: 하)
@@ -84,7 +85,7 @@ class KakaoTest2020{
                 resultStr.append(s.substring(s.length - (s.length % splitCnt), s.length))
             }
 
-            if(answer > resultStr.length) {
+            if (answer > resultStr.length) {
                 answer = resultStr.length
             }
 //            strArray.add(resultStr.toString())
@@ -138,17 +139,17 @@ class KakaoTest2020{
         var answer = ""
         intputs = "(()())()"
         result = "(()())()"
-        answer= solution02(intputs)
+        answer = solution02(intputs)
         Assert.assertEquals(result, answer)
 
         intputs = ")("
         result = "()"
-        answer= solution02(intputs)
+        answer = solution02(intputs)
         Assert.assertEquals(result, answer)
 
         intputs = "()))((()"
         result = "()(())()"
-        answer= solution02(intputs)
+        answer = solution02(intputs)
         Assert.assertEquals(result, answer)
 
     }
@@ -274,59 +275,61 @@ class KakaoTest2020{
         }
         println()
 
-        answer= solution03(key, lock)
+        answer = solution03(key, lock)
         Assert.assertEquals(true, answer)
 
 
     }
+
     fun solution03(key: Array<IntArray>, lock: Array<IntArray>): Boolean {
-        var minX = lock[0].size -1//홈의 최소 X
-        var minY = lock.size -1//홈의 최소 Y
+        var minX = lock[0].size - 1//홈의 최소 X
+        var minY = lock.size - 1//홈의 최소 Y
         var maxX = 0//홈의 최대 X
         var maxY = 0//홈의 최대 Y
 
         lock.forEachIndexed { indexY, row ->
             row.forEachIndexed { indexX, value ->
-                //홈의 최소 최대 index를 구함
-                if(value == 0) {
-                    if(minX > indexX) {
+                //홈의 최소 최대 x, y index를 구함
+                if (value == 0) {
+                    if (minX > indexX) {
                         minX = indexX
                     }
-                    if(minY > indexY) {
+                    if (minY > indexY) {
                         minY = indexY
                     }
-                    if(maxX < indexX) {
+                    if (maxX < indexX) {
                         maxX = indexX
                     }
-                    if(maxY < indexY) {
+                    if (maxY < indexY) {
                         maxY = indexY
                     }
                 }
             }
         }
-        if(key.size <= maxY - minY || key[0].size <= maxX - minX) {
+
+        if (key.size <= maxY - minY || key[0].size <= maxX - minX) {
             //lock의 홈 사이의 거리가 키보다 크면 실패
             return false
         }
 
-        for (i in 0 .. 3) { //90도방향으로 돌려가면서 체크
-            if(keyCheck(key, lock, minX, minY, maxX, maxY)) {
+        var tempKey = key
+        for (i in 0..3) { //90도방향으로 돌려가면서 체크
+            if (keyCheck(tempKey, lock, minX, minY, maxX, maxY)) {
                 return true
             }
-            rotate(key)
+            tempKey = rotate(tempKey)
         }
 
         return false
     }
 
     //키가 맞는지 체크
-    fun keyCheck(key: Array<IntArray>, lock: Array<IntArray>, minX: Int, minY: Int, maxX: Int, maxY: Int):Boolean {
-        for(y in maxY + 1 - key.size ..  minY) {
-            root@ for(x in maxX + 1 - key.size ..  minX) {
+    fun keyCheck(key: Array<IntArray>, lock: Array<IntArray>, minX: Int, minY: Int, maxX: Int, maxY: Int): Boolean {
+        for (y in maxY + 1 - key.size..minY) {
+            root@ for (x in maxX + 1 - key.size..minX) {
                 // key의 x, y 좌표
-                var checkMaxY = maxX
-                for(i in Math.max(0, Math.min(y, minY)) .. Math.min(lock.size - 1, Math.max(maxY, y+key.size-1))) {
-                    for(j in Math.max(0,Math.min(x, minX)) .. Math.min(lock.size - 1, Math.max(maxX, x+key.size-1))) {
+                for (i in Math.max(0, y)..Math.min(lock.size - 1, Math.max(maxY, y + key.size - 1))) {
+                    for (j in Math.max(0, x)..Math.min(lock.size - 1, Math.max(maxX, x + key.size - 1))) {
                         // key의 x, y 좌표에 따라 겹처지는 부분만 체크
                         if (lock[i][j] == 0) {   // lock : 홈
                             if (key[i - y][j - x] == 0) { //key : 홈 이면 실패
@@ -346,17 +349,15 @@ class KakaoTest2020{
     }
 
     //정사각형 시계방향 90도 회전
-    fun rotate(array: Array<IntArray>) {
-        for (step in 0 until  array.size / 2) {
-            var last = array.size - 1 - step
-            for(i in step until last) {
-                var temp = array[step][step + i]
-                array[step][step + i] = array[last - i][step]
-                array[last - i][step] = array[last][last - i]
-                array[last][last - i] = array[step + i][last]
-                array[step + i][last] = temp
+    fun rotate(array: Array<IntArray>): Array<IntArray> {
+        val tempArray = Array<IntArray>(array.size) { IntArray(array.size) }
+        val maxIndex = array.size - 1
+        for (y in 0 until array.size) {
+            for (x in 0 until array.size) {
+                tempArray[y][x] = array[maxIndex - x][y]
             }
         }
+        return tempArray
     }
 
 //  https://programmers.co.kr/learn/courses/30/lessons/60060
