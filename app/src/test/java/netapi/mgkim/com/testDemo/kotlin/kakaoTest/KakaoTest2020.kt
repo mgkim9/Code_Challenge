@@ -606,7 +606,7 @@ class KakaoTest2020 {
     }
 
 
-//  https://programmers.co.kr/learn/courses/30/lessons/60061
+//  https://programmers.co.kr/learn/courses/30/lessons/60062
 //6. 외벽 점검
     /**
     문제 설명
