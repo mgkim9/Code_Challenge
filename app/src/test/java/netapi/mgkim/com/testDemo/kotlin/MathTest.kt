@@ -1,6 +1,8 @@
 package netapi.mgkim.com.testDemo.kotlin
 
 import org.junit.Test
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class MathTest () {
@@ -85,6 +87,47 @@ class MathTest () {
     fun lcm(a:Int, b:Int):Int {
         System.out.println("gcm a " + a + " b " + b)
         return a*b/gcm(b, a%b)
+    }
+
+    //Combination 조합
+    private fun combination(strs: CharArray, temps: CharArray, r: Int, index: Int, target: Int) {
+        if (r == 0) {
+            System.out.println(Arrays.toString(temps))  // nCr 출력
+            //            purmutation(temps, 0); // nPr 출력
+        } else if (target >= strs.size) {
+            return
+        } else {
+            temps[index] = strs[target]
+            combination(strs, temps, r - 1, index + 1, target + 1)
+            combination(strs, temps, r, index, target + 1)
+        }
+
+    }
+
+    //Purmutation 순열
+    private fun purmutation(strs: CharArray, index: Int) {
+        if (index >= strs.size - 1) {
+            System.out.println(Arrays.toString(strs))
+        } else {
+            for (i in index until strs.size) {
+                swap(strs, i, index)
+                purmutation(strs, index + 1)
+                swap(strs, i, index)
+            }
+        }
+    }
+
+    private fun swap(arr: IntArray, a: Int, b: Int) {
+        val temp = arr[a]
+        arr[a] = arr[b]
+        arr[b] = temp
+    }
+
+
+    private fun swap(arr: CharArray, a: Int, b: Int) {
+        val temp = arr[a]
+        arr[a] = arr[b]
+        arr[b] = temp
     }
 
 

@@ -21,6 +21,8 @@ public class ArrayOutput {
     }
 
     //조합
+    //n개 에서 r개를 뽑아 출력 (중복X)
+    //(ex : ab, ac, ad, bc, bd...)
     void combination(int[] arr, int[] tempArr, int size, int cnt, int index, int target) {
         if (cnt == 0) {
             permutation(tempArr, index);
@@ -34,6 +36,8 @@ public class ArrayOutput {
     }
 
     //순열
+    //n개 에서 r개를 뽑아 출력 (중복O)
+    //(ex : ab, ac, ad, ba, bc...)
     void permutation(int[] arr, int index) {
         if (index == arr.length) {
             for (int n : arr) System.out.print(n);

@@ -393,4 +393,333 @@ class KakaoTest2020 {
     fun Test04() {
         TrieTest().Test01()
     }
+
+
+//  https://programmers.co.kr/learn/courses/30/lessons/60061
+//5. 기둥과 보 설치
+    /**
+    문제 설명
+    빙하가 깨지면서 스노우타운에 떠내려 온 죠르디는 인생 2막을 위해 주택 건축사업에 뛰어들기로 결심하였습니다. 죠르디는 기둥과 보를 이용하여 벽면 구조물을 자동으로 세우는 로봇을 개발할 계획인데, 그에 앞서 로봇의 동작을 시뮬레이션 할 수 있는 프로그램을 만들고 있습니다.
+    프로그램은 2차원 가상 벽면에 기둥과 보를 이용한 구조물을 설치할 수 있는데, 기둥과 보는 길이가 1인 선분으로 표현되며 다음과 같은 규칙을 가지고 있습니다.
+
+    기둥은 바닥 위에 있거나 보의 한쪽 끝 부분 위에 있거나, 또는 다른 기둥 위에 있어야 합니다.
+    보는 한쪽 끝 부분이 기둥 위에 있거나, 또는 양쪽 끝 부분이 다른 보와 동시에 연결되어 있어야 합니다.
+    단, 바닥은 벽면의 맨 아래 지면을 말합니다.
+
+    2차원 벽면은 n x n 크기 정사각 격자 형태이며, 각 격자는 1 x 1 크기입니다. 맨 처음 벽면은 비어있는 상태입니다. 기둥과 보는 격자선의 교차점에 걸치지 않고, 격자 칸의 각 변에 정확히 일치하도록 설치할 수 있습니다. 다음은 기둥과 보를 설치해 구조물을 만든 예시입니다.
+    예를 들어, 위 그림은 다음 순서에 따라 구조물을 만들었습니다.
+
+    (1, 0)에서 위쪽으로 기둥을 하나 설치 후, (1, 1)에서 오른쪽으로 보를 하나 만듭니다.
+    (2, 1)에서 위쪽으로 기둥을 하나 설치 후, (2, 2)에서 오른쪽으로 보를 하나 만듭니다.
+    (5, 0)에서 위쪽으로 기둥을 하나 설치 후, (5, 1)에서 위쪽으로 기둥을 하나 더 설치합니다.
+    (4, 2)에서 오른쪽으로 보를 설치 후, (3, 2)에서 오른쪽으로 보를 설치합니다.
+    만약 (4, 2)에서 오른쪽으로 보를 먼저 설치하지 않고, (3, 2)에서 오른쪽으로 보를 설치하려 한다면 2번 규칙에 맞지 않으므로 설치가 되지 않습니다. 기둥과 보를 삭제하는 기능도 있는데 기둥과 보를 삭제한 후에 남은 기둥과 보들 또한 위 규칙을 만족해야 합니다. 만약, 작업을 수행한 결과가 조건을 만족하지 않는다면 해당 작업은 무시됩니다.
+
+    벽면의 크기 n, 기둥과 보를 설치하거나 삭제하는 작업이 순서대로 담긴 2차원 배열 build_frame이 매개변수로 주어질 때, 모든 명령어를 수행한 후 구조물의 상태를 return 하도록 solution 함수를 완성해주세요.
+
+    제한사항
+
+    n은 5 이상 100 이하인 자연수입니다.
+    build_frame의 세로(행) 길이는 1 이상 1,000 이하입니다.
+    build_frame의 가로(열) 길이는 4입니다.
+    build_frame의 원소는 [x, y, a, b]형태입니다.
+    x, y는 기둥, 보를 설치 또는 삭제할 교차점의 좌표이며, [가로 좌표, 세로 좌표] 형태입니다.
+    a는 설치 또는 삭제할 구조물의 종류를 나타내며, 0은 기둥, 1은 보를 나타냅니다.
+    b는 구조물을 설치할 지, 혹은 삭제할 지를 나타내며 0은 삭제, 1은 설치를 나타냅니다.
+    벽면을 벗어나게 기둥, 보를 설치하는 경우는 없습니다.
+    바닥에 보를 설치 하는 경우는 없습니다.
+    구조물은 교차점 좌표를 기준으로 보는 오른쪽, 기둥은 위쪽 방향으로 설치 또는 삭제합니다.
+    구조물이 겹치도록 설치하는 경우와, 없는 구조물을 삭제하는 경우는 입력으로 주어지지 않습니다.
+    최종 구조물의 상태는 아래 규칙에 맞춰 return 해주세요.
+    return 하는 배열은 가로(열) 길이가 3인 2차원 배열로, 각 구조물의 좌표를 담고있어야 합니다.
+    return 하는 배열의 원소는 [x, y, a] 형식입니다.
+    x, y는 기둥, 보의 교차점 좌표이며, [가로 좌표, 세로 좌표] 형태입니다.
+    기둥, 보는 교차점 좌표를 기준으로 오른쪽, 또는 위쪽 방향으로 설치되어 있음을 나타냅니다.
+    a는 구조물의 종류를 나타내며, 0은 기둥, 1은 보를 나타냅니다.
+    return 하는 배열은 x좌표 기준으로 오름차순 정렬하며, x좌표가 같을 경우 y좌표 기준으로 오름차순 정렬해주세요.
+    x, y좌표가 모두 같은 경우 기둥이 보보다 앞에 오면 됩니다.
+     */
+    @Test
+    fun Test05() {
+        var build_frame: Array<IntArray>
+        var results: Array<IntArray>
+        var n = 0
+        var out: Array<IntArray>
+
+        build_frame = arrayOf(intArrayOf(1, 0, 0, 1), intArrayOf(1, 1, 1, 1), intArrayOf(2, 1, 0, 1), intArrayOf(2, 2, 1, 1), intArrayOf(5, 0, 0, 1), intArrayOf(5, 1, 0, 1), intArrayOf(4, 2, 1, 1), intArrayOf(3, 2, 1, 1))
+        results = arrayOf(intArrayOf(1, 0, 0), intArrayOf(1, 1, 1), intArrayOf(2, 1, 0), intArrayOf(2, 2, 1), intArrayOf(3, 2, 1), intArrayOf(4, 2, 1), intArrayOf(5, 0, 0), intArrayOf(5, 1, 0))
+        n = 5
+        out = solution05(n, build_frame)
+        out.forEach {
+            println(Arrays.toString(it))
+        }
+        Assert.assertEquals(results, out)
+        println()
+
+        build_frame = arrayOf(intArrayOf(0, 0, 0, 1), intArrayOf(2, 0, 0, 1), intArrayOf(4, 0, 0, 1), intArrayOf(0, 1, 1, 1), intArrayOf(1, 1, 1, 1), intArrayOf(2, 1, 1, 1), intArrayOf(3, 1, 1, 1), intArrayOf(2, 0, 0, 0), intArrayOf(1, 1, 1, 0), intArrayOf(2, 2, 0, 1))
+        results = arrayOf(intArrayOf(0, 0, 0), intArrayOf(0, 1, 1), intArrayOf(1, 1, 1), intArrayOf(2, 1, 1), intArrayOf(3, 1, 1), intArrayOf(4, 0, 0))
+        n = 5
+        out = solution05(n, build_frame)
+
+        out.forEach {
+            println(Arrays.toString(it))
+        }
+
+        Assert.assertEquals(results, out)
+
+
+    }
+
+    val _X = 0   //X 좌표
+    val _Y = 1   //Y 좌표
+    val FRAME = 2   //구조물
+    val METHOD = 3   //동작
+
+    val DELETE = 0  //제거
+    val ADD = 1     //추가
+
+    val PILLAR = 0 //기둥
+    val ROOF = 1    // 보
+
+    val GRID_NONE = 0b00    // 빈공간
+    val GRID_PILLAR = 0b01 //기둥
+    val GRID_ROOF = 0b10    // 보
+
+    fun solution05(n: Int, build_frame: Array<IntArray>): Array<IntArray> {
+        var size = n + 1
+        var board = Array<IntArray>(size) { IntArray(size) { GRID_NONE } }
+
+        var count = 0
+        build_frame.forEach { build ->
+            when (build[METHOD]) {
+                ADD -> {
+                    var buildingNow = if (build[FRAME] == PILLAR) GRID_PILLAR else GRID_ROOF
+                    if (canBuild(board, build[_X], build[_Y], buildingNow)) {
+                        board[build[_Y]][build[_X]] = board[build[_Y]][build[_X]] or buildingNow
+                        count++
+                        println("ADD success : " + Arrays.toString(build))
+                    } else {
+                        //실패!
+                        println("ADD fail : " + Arrays.toString(build))
+                    }
+                }
+                DELETE -> {
+                    var rolback: Int = board[build[_Y]][build[_X]]
+                    var isRolback = false
+                    val checks = ArrayList<IntArray>()
+                    if (build[FRAME] == PILLAR) {
+                        board[build[_Y]][build[_X]] = board[build[_Y]][build[_X]] and GRID_PILLAR.inv() //선 삭제
+                        if (build[_Y] + 2 < size) {  // y축 벗어나는지 체크
+                            checks.add(intArrayOf(build[_X], build[_Y] + 1, board[build[_Y] + 1][build[_X]]))
+                            if (build[_X] - 1 >= 0) { // x축 벗어나는지 체크
+                                checks.add(intArrayOf(build[_X] - 1, build[_Y] + 1, board[build[_Y] + 1][build[_X] - 1]))
+                            }
+                        }
+                    } else {
+                        board[build[_Y]][build[_X]] = board[build[_Y]][build[_X]] and GRID_ROOF.inv() //선 삭제
+                        checks.add(intArrayOf(build[_X], build[_Y], board[build[_Y]][build[_X]]))
+                        if (build[_X] - 1 >= 0) {// x축 벗어나는지 체크
+                            checks.add(intArrayOf(build[_X] - 1, build[_Y], board[build[_Y]][build[_X] - 1]))
+                        }
+                        if (build[_X] + 2 < size) {// x축 벗어나는지 체크
+                            checks.add(intArrayOf(build[_X] + 1, build[_Y], board[build[_Y]][build[_X] + 1]))
+                        }
+                    }
+
+                    checks.forEach { check ->
+                        //문제점 체크
+                        if (!canBuild(board, check[_X], check[_Y], check[FRAME])) {
+                            isRolback = true
+                            return@forEach
+                        }
+                    }
+
+                    if (isRolback) {   //후 롤백
+                        board[build[_Y]][build[_X]] = rolback
+                        println("DELETE fail : " + Arrays.toString(build) + " rolback " + rolback)
+                    } else {
+                        count--
+                        println("DELETE success : " + Arrays.toString(build))
+                    }
+                }
+            }
+        }
+        board.forEach {
+            println(Arrays.toString(it))
+        }
+        println()
+
+        var results = Array<IntArray>(count) { IntArray(3) }
+        var curCnt = 0
+
+        for (x in 0 until size) {
+            for (y in 0 until size) {
+                if (board[y][x] and GRID_PILLAR > 0) {
+                    results[curCnt][_X] = x
+                    results[curCnt][_Y] = y
+                    results[curCnt][FRAME] = PILLAR
+                    curCnt++
+                }
+                if (board[y][x] and GRID_ROOF > 0) {
+                    results[curCnt][_X] = x
+                    results[curCnt][_Y] = y
+                    results[curCnt][FRAME] = ROOF
+                    curCnt++
+                }
+            }
+        }
+
+        return results
+    }
+
+    fun canBuild(board: Array<IntArray>, x: Int, y: Int, gridFrame: Int): Boolean {
+        var curGrid = GRID_NONE
+        if (gridFrame and GRID_PILLAR > 0) {
+            //기둥 설치 가능 case
+            //ALL. Y < size - 1
+            //1.바닥 인경우
+            //2.기둥 위인 경우
+            //3.지붕 오른쪽 인경우
+            //4.지붕 위 인경우
+            if (y < board.size - 1
+                    && (y == 0
+                            || y >= 1 && board[y - 1][x] and GRID_PILLAR > 0
+                            || x >= 1 && board[y][x - 1] and GRID_ROOF > 0
+                            || board[y][x] and GRID_ROOF > 0)) {
+                curGrid = curGrid or GRID_PILLAR
+            }
+        }
+        if (gridFrame and GRID_ROOF > 0) {
+            //지붕 설치 가능 case
+            //ALL. Y > 0 && X < size - 1
+            //1.밑에 기둥이 있는 경우
+            //2.우측 밑에 기둥이 있는 경우
+            //3.우측과 좌측에 지붕이 있는 경우
+            if (y > 0 && x < board.size - 1
+                    && (board[y - 1][x] and GRID_PILLAR > 0
+                            || board[y - 1][x + 1] and GRID_PILLAR > 0
+                            || x >= 1 && board[y][x - 1] and GRID_ROOF > 0 && board[y][x + 1] and GRID_ROOF > 0)) {
+                curGrid = curGrid or GRID_ROOF
+            }
+        }
+        return curGrid == gridFrame
+    }
+
+
+//  https://programmers.co.kr/learn/courses/30/lessons/60062
+//6. 외벽 점검
+    /**
+    문제 설명
+    레스토랑을 운영하고 있는 스카피는 레스토랑 내부가 너무 낡아 친구들과 함께 직접 리모델링 하기로 했습니다. 레스토랑이 있는 곳은 스노우타운으로 매우 추운 지역이어서 내부 공사를 하는 도중에 주기적으로 외벽의 상태를 점검해야 할 필요가 있습니다.
+
+    레스토랑의 구조는 완전히 동그란 모양이고 외벽의 총 둘레는 n미터이며, 외벽의 몇몇 지점은 추위가 심할 경우 손상될 수도 있는 취약한 지점들이 있습니다. 따라서 내부 공사 도중에도 외벽의 취약 지점들이 손상되지 않았는 지, 주기적으로 친구들을 보내서 점검을 하기로 했습니다. 다만, 빠른 공사 진행을 위해 점검 시간을 1시간으로 제한했습니다. 친구들이 1시간 동안 이동할 수 있는 거리는 제각각이기 때문에, 최소한의 친구들을 투입해 취약 지점을 점검하고 나머지 친구들은 내부 공사를 돕도록 하려고 합니다. 편의 상 레스토랑의 정북 방향 지점을 0으로 나타내며, 취약 지점의 위치는 정북 방향 지점으로부터 시계 방향으로 떨어진 거리로 나타냅니다. 또, 친구들은 출발 지점부터 시계, 혹은 반시계 방향으로 외벽을 따라서만 이동합니다.
+
+    외벽의 길이 n, 취약 지점의 위치가 담긴 배열 weak, 각 친구가 1시간 동안 이동할 수 있는 거리가 담긴 배열 dist가 매개변수로 주어질 때, 취약 지점을 점검하기 위해 보내야 하는 친구 수의 최소값을 return 하도록 solution 함수를 완성해주세요.
+
+    제한사항
+    n은 1 이상 200 이하인 자연수입니다.
+    weak의 길이는 1 이상 15 이하입니다.
+    서로 다른 두 취약점의 위치가 같은 경우는 주어지지 않습니다.
+    취약 지점의 위치는 오름차순으로 정렬되어 주어집니다.
+    weak의 원소는 0 이상 n - 1 이하인 정수입니다.
+    dist의 길이는 1 이상 8 이하입니다.
+    dist의 원소는 1 이상 100 이하인 자연수입니다.
+    친구들을 모두 투입해도 취약 지점을 전부 점검할 수 없는 경우에는 -1을 return 해주세요.
+
+     */
+    @Test
+    fun Test06() {
+        var weak: IntArray
+        var dist: IntArray
+        var n = 0
+        var result = 0
+        var out = 0
+
+        weak = intArrayOf(1, 5, 6, 10)
+        dist = intArrayOf(1, 2, 3, 4)
+        n = 12
+        result = 2
+        out = solution06(n, weak, dist)
+        Assert.assertEquals(result, out)
+
+        weak = intArrayOf(1, 3, 4, 9, 10)
+        dist = intArrayOf(2, 5, 7)
+        n = 12
+        result = 1
+        out = solution06(n, weak, dist)
+        Assert.assertEquals(result, out)
+    }
+
+    fun solution06(n: Int, weak: IntArray, dist: IntArray): Int {
+        dist.sortDescending()
+        if(weak.size == 1) {
+            return 1
+        }
+        purmutation(n, weak, dist, 0)
+        if (minCnt == Integer.MAX_VALUE) {
+            return -1
+        }
+        return minCnt
+    }
+
+    var minCnt = Integer.MAX_VALUE
+    private fun purmutation(n: Int, weak: IntArray, dist: IntArray, cnt: Int) {
+        if (cnt >= dist.size) {
+            // dist의 순열
+            var curCnt = checkLine(n, weak, dist)
+            if (minCnt > curCnt) {
+                minCnt = curCnt
+            }
+            println("curCnt " + curCnt + " " + Arrays.toString(dist))
+            return
+        }
+        for (i in cnt until dist.size) {
+            swap(dist, i, cnt)
+            purmutation(n, weak, dist, cnt + 1)
+            swap(dist, i, cnt)
+        }
+    }
+
+    private fun checkLine(n: Int, weak: IntArray, dist: IntArray): Int {
+        root@ for (cnt in 0 until weak.size) { //시작점을 다르게하여 모든 case 체크
+            var index = 0
+            var prev = weak[cnt]
+            var runner = dist[index]
+            root2@ for (i in 1 until weak.size) {
+                if (index >= minCnt) {
+                    break@root2
+                }
+                var next = weak[(i + cnt) % weak.size]
+                var distance =
+                        if (prev > next) {    // 끝 지점 통과
+                            next + n - prev
+                        } else {
+                            next - prev
+                        }
+                prev = next
+                if (runner >= distance) {
+                    runner -= distance
+                } else {
+                    if (index >= dist.size - 1) {
+                        continue@root
+                    }
+                    runner = dist[++index]
+                    if(i >= weak.size - 1 ) {
+                        break@root2
+                    }
+                }
+            }
+            if (minCnt > index + 1) {
+                minCnt = index + 1
+            }
+        }
+
+        return minCnt
+    }
+
+    private fun swap(arr: IntArray, a: Int, b: Int) {
+        val temp = arr[a]
+        arr[a] = arr[b]
+        arr[b] = temp
+    }
 }
