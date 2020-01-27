@@ -30,7 +30,13 @@ class DFSnBFSTest {
         var out = solution03(tickets)
         Assert.assertEquals(result, out)
 
-        tickets = arrayOf(arrayOf("ICN", "SFO"), arrayOf("ICN", "ATL"), arrayOf("SFO", "ATL"), arrayOf("ATL", "ICN"), arrayOf("ATL", "SFO"))
+        tickets = arrayOf(
+            arrayOf("ICN", "SFO"),
+            arrayOf("ICN", "ATL"),
+            arrayOf("SFO", "ATL"),
+            arrayOf("ATL", "ICN"),
+            arrayOf("ATL", "SFO")
+        )
         result = arrayOf("ICN", "ATL", "ICN", "SFO", "ATL", "SFO")
         out = solution03(tickets)
         Assert.assertEquals(result, out)
@@ -48,7 +54,13 @@ class DFSnBFSTest {
         return arrayList[0].split(" ").toTypedArray()
     }
 
-    private fun dfs(tickets: Array<Array<String>>, visiteds: BooleanArray, st: Stack<String>, cnt: Int, arrayList: ArrayList<String>) {
+    private fun dfs(
+        tickets: Array<Array<String>>,
+        visiteds: BooleanArray,
+        st: Stack<String>,
+        cnt: Int,
+        arrayList: ArrayList<String>
+    ) {
         if (cnt >= tickets.size) {
             //            System.out.println(st.toString());
             val buffer = StringBuffer()
@@ -67,5 +79,59 @@ class DFSnBFSTest {
                 st.pop()
             }
         }
+    }
+
+    //https://programmers.co.kr/learn/courses/30/lessons/43165?language=kotlin
+    //타겟 넘버
+
+    @Test
+    fun Test003() {
+        var numbers: IntArray = intArrayOf(1,1,1,1,1)
+        var target: Int = 3
+        println(Solution003().solution(numbers, target))
+    }
+    class Solution003 {
+        private var resultCnt = 0
+        fun solution(numbers: IntArray, target: Int): Int {
+            findResult(numbers, target, 0, 0)
+            var answer = resultCnt
+            return answer
+        }
+
+        private fun findResult(numbers: IntArray, target: Int, result:Int, index: Int) {
+            if(index >= numbers.size) {
+                if(target == result) {
+                    resultCnt++
+                }
+                return
+            }
+            Calculator.values().forEach { cal ->
+                findResult(numbers, target, cal.cal(result, numbers[index]), index+1)
+            }
+        }
+
+        private enum class Calculator {
+            PLUSE {
+                override fun cal(a: Int, b: Int) = a + b
+            },
+            MINUS {
+                override fun cal(a: Int, b: Int) = a - b
+            }/*,
+            R_MINUS {
+                override fun cal(a: Int, b: Int) = b - a
+            },
+            MUL {
+                override fun cal(a: Int, b: Int) = a * b
+            },
+            DIV {
+                override fun cal(a: Int, b: Int) = if(b == 0) 0 else a / b
+            },
+            R_DIV {
+                override fun cal(a: Int, b: Int) = if(a == 0) 0 else b / a
+            }*/;
+
+            abstract fun cal(a: Int, b: Int): Int
+        }
+
     }
 }

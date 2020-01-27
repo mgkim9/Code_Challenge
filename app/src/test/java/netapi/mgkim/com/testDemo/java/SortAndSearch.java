@@ -3,6 +3,9 @@ package netapi.mgkim.com.testDemo.java;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SortAndSearch {
     @Test
@@ -27,6 +30,10 @@ public class SortAndSearch {
         System.out.println("sortByMergeSort : " + Arrays.toString(tempArray));
 
         System.out.println("binarySearch : " + binarySearch(tempArray, 13));
+
+
+        Map<String, String> map = new HashMap<>();
+        Map<String, String> syncMap = Collections.synchronizedMap(map);
 
     }
 
