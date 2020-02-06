@@ -3,9 +3,9 @@ package netapi.mgkim.com.testDemo.java;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class SortAndSearch {
     @Test
@@ -25,6 +25,10 @@ public class SortAndSearch {
         sortByQuickSort(tempArray);
         System.out.println("sortByQuickSort : " + Arrays.toString(tempArray));
 
+        tempArray = array.clone();
+        radixSort(tempArray);
+        System.out.println("radixSort : " + Arrays.toString(tempArray));
+		
         tempArray = array.clone();
         sortByMergeSort(tempArray);
         System.out.println("sortByMergeSort : " + Arrays.toString(tempArray));
@@ -153,6 +157,34 @@ public class SortAndSearch {
             }
         }
     }
+
+    private void  radixSort(int[] array) {
+        int finishIndex = 0;
+        int digit = 1;
+
+        Queue<Integer>[] queues = new LinkedList[10];
+        for (int i = 0; i < queues.length; i++) {
+            queues[i] = new LinkedList();
+        }
+
+        while (finishIndex < array.length) {
+            for (int i = finishIndex; i < array.length; i++) {
+                if(array[i] < digit) {
+                    array[finishIndex++] = array[i];
+                } else {
+                    queues[(array[i] / digit) % 10].add(array[i]);
+                }
+            }
+            int curIndex = finishIndex;
+            for (Queue<Integer> stack: queues) {
+                while (!stack.isEmpty()) {
+                    array[curIndex++] = stack.poll();
+                }
+            }
+            digit *= 10;
+        }
+    }
+
 
     private void swap(int[] array, int indexA, int indexB) {
         int temp = array[indexA];

@@ -17,6 +17,10 @@ class SortAndSearch{
         sortByQuickSort(tempArray)
         println("sortByQuickSort : " + Arrays.toString(tempArray))
 
+        tempArray = array.clone()
+        radixSort(tempArray)
+        println("radixSort : " + Arrays.toString(tempArray))
+
 //        Collections.sort()
         println("binarySearch : " + binarySearch(tempArray, 7))
     }
@@ -67,6 +71,35 @@ class SortAndSearch{
             }
         }
         return -start
+    }
+
+    private fun radixSort(array: IntArray) {
+        val queues = Array<Queue<Int>>(10) {
+            LinkedList()
+        }
+        var digit = 1
+        var burketIndex = 0
+        var finishIndex = 0
+        while (finishIndex < array.size) {
+            for (i in finishIndex until array.size) {
+                if (array[i] < digit) {
+                    array[finishIndex] = array[i]
+                    finishIndex++
+                } else {
+                    burketIndex = (array[i] / digit) % 10
+                    queues[burketIndex].add(array[i])
+                }
+            }
+
+            var curIndex = finishIndex
+            queues.forEach {
+                while (!it.isEmpty()) {
+                    array[curIndex] = it.poll()
+                    curIndex++
+                }
+            }
+            digit *= 10
+        }
     }
 
     fun swap(array:IntArray, left:Int, right:Int) {
